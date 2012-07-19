@@ -1,0 +1,25 @@
+#!/bin/bash
+# script : src
+# date   : 2012.07.18
+# author : Yi Zhang
+# version: 1.0
+#
+# license: GPL v2 please check COPYRIGHT.txt for details
+#
+
+# include global ipa environment file
+
+
+program=$1
+name=`which $program 2>/dev/null`
+if [ "$name" != "" ];then
+    echo "#===========================================#"
+    echo "# source  : $program "
+    echo "# location: [$name]"
+    echo "#===========================================#"
+    echo ""
+    cat $name
+    echo ""
+else
+    echo "[$program] not found in PATH"
+fi
