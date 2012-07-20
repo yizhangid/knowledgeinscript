@@ -7,9 +7,6 @@
 # license: GPL v2 please check COPYRIGHT.txt for details
 #
 
-# include global ipa environment file
-
-
 program=$1
 name=`which $program 2>/dev/null`
 if [ "$name" != "" ];then
