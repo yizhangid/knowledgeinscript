@@ -17,7 +17,7 @@ replica_hostname=$1
 replica_ip=$2
 
 echo "setp 1. prepare replica [on ipa master server]"
-ipa-replica-preapre  $replica_hostname --ip-address $replica_ip
+ipa-replica-prepare  $replica_hostname --ip-address $replica_ip
 
 echo "step 2. copy prepare file to replica"
 replica_preparefile="$replica_preparefile_dir/replica-info-${replica_hostname}.gpg"
