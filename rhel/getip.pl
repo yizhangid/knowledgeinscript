@@ -48,7 +48,6 @@ sub do_host
 {
     $info = `host $hostname`;
     my @lines=split(/\n/,$info);
-    my @ips;
     foreach my $line (@lines){
         if ($line =~ /has address (\d+)\.(\d+).(\d+)\.(\d+)/){
             my $ip = "$1.$2.$3.$4";
@@ -64,7 +63,6 @@ sub do_nslookup_ipv4
 {
     $info = `nslookup $hostname`;
     my @lines=split(/\n/,$info);
-    my @ips;
     foreach my $line (@lines){
         if ($line =~ /Address: (\d+)\.(\d+).(\d+)\.(\d+)/){
             my $ip = "$1.$2.$3.$4";
@@ -80,7 +78,6 @@ sub do_nslookup_ipv6
 {
     $info = `nslookup -query=AAAA $hostname`;
     my @lines=split(/\n/,$info);
-    my @ips;
     foreach my $line (@lines){
         if ($line =~ /has AAAA address (.*)$/){
             my $ip = "$1";
