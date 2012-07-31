@@ -9,7 +9,8 @@
 
 
 # this is global data file that relate to all ipa scripts.
-
+pw="YOURSecretPassword"
+forwarder=10.10.10.10
 tcpports="53,80,443,389,636,88,464,9180,9443,9444,9445,9446,9701"
 udpports="53,88,464,123"
 replica_preparefile_dir="/var/lib/ipa"
