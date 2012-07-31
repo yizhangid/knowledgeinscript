@@ -7,7 +7,6 @@
 #
 # description: change default runlevel based on user input
 
-
 runlevel=$1
 if [ "$runlevel" = "" ];then
 	echo -n "set runlevel (0-6), 3 multiuser console; 5 graphical desktop (default 5) "
@@ -17,16 +16,30 @@ if [ "$runlevel" = "" ];then
     fi
 fi
 
-runlevelFile="/lib/systemd/system/runlevel${runlevel}.target"
-targetFile="/etc/systemd/system/default.target"
-
-cmd="ln -sf $runlevelFile $targetFile"
-echo "command: $cmd"
-if $cmd
+if [[ $runlevel != [0-9]* ]] ;then
+    echo "runlevel has to be an integer within [0-6]"
+    exit 1
+elif [ $runlevel -gt 6 ] || [ $runlevel -lt 0 ]
 then
-    echo "success !!"
-    ls -l $targetFile
-    echo ""
+    echo "no such run level, please use integer within [0-6]"
+    exit 1
 else
-    echo "failed !!"
+    runlevelFile="/lib/systemd/system/runlevel${runlevel}.target"
+    targetFile="/etc/systemd/system/default.target"
+
+    if [ ! -f $runlevelFile ];then
+        echo "runlevel file not found, please check [$runlevelFile]"
+        exit 1
+    else
+        cmd="ln -sf $runlevelFile $targetFile"
+        echo "command: $cmd"
+        if $cmd
+        then
+            echo "success !!"
+            ls -l $targetFile
+            echo ""
+        else
+            echo "failed !!"
+        fi
+    fi
 fi
