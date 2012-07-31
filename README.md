@@ -1,8 +1,12 @@
 knowledgeinscript
 =================
-Here are scripts relate to my every day QA work at for IPA project (freeipa.org). They born to be open sourced since this is an open source project.
+Why:
+    I am bad at memoring things. I perfer scrripting the knowledge I obtained from time to time.
 
-::Script Naming Stratage:: <topic>.<target>.<action>.<type>
+What: 
+    Here are scripts relate to my every day QA work at for IPA project (freeipa.org). They born to be open sourced since this is an open source project.
+
+    ::Script Naming Stratage:: <topic>.<target>.<action>.<type>
 
     topic: ipa = ipa project related scripts
            rhel= red hat enterprise linux administration scripts
@@ -16,10 +20,12 @@ Here are scripts relate to my every day QA work at for IPA project (freeipa.org)
             pl = perl script 
             ...
 
-    example: ipa.user.add.sh : shell script that can add ipa user under ipa project
+    example: 
+        ipa.user.add.sh  : shell script that can create new ipa user under ipa project
+        ipa.group.add.sh : shell script that create 1 new group, 3 new ipa users and then append these newly created users to the group
 
-::Directory ./ipa ::
-    has all ipa related commands. these are simple commands, it make ipa work a little easier
+    ::Directory ./ipa ::
+    IPA (freeipa.org) related commands. It makes ipa work a little easier
 
-::Directory ./rhel::
-    red hat enterprise linux related commands.
+    ::Directory ./rhel::
+    Red Hat Enterprise Linux related commands. These scripts should apply to most red hat linux or fedora linux based linux
