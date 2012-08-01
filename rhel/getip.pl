@@ -15,8 +15,7 @@ use Getopt::Std;
 #          global variables               #
 ###########################################
 our $hostname;
-our $alias;
-our $info;
+our $linux_cmd_output;
 our %ips;
 
 ###########################################
@@ -29,11 +28,11 @@ if ( $#ARGV < 0){
     do_host();
     do_nslookup_ipv6();
     do_nslookup_ipv4();
-    our @list = sort keys %ips;
-    if ( $#list >= 0 ){
-        print "@list";
+    our @list_of_ips = sort keys %ips;
+    if ( $#list_of_ips >= 0 ){
+        print "@list_of_ips";
     }else{
-        print "Can not resolve";
+        print "Can not resolve hostname [$hostname] with linux commands: 'host', 'nslookup $hostname'";
     }
     print "\n";
 }else{
@@ -46,8 +45,8 @@ if ( $#ARGV < 0){
 
 sub do_host
 {
-    $info = `host $hostname`;
-    my @lines=split(/\n/,$info);
+    $linux_cmd_output = `host $hostname`;
+    my @lines=split(/\n/,$linux_cmd_output);
     foreach my $line (@lines){
         if ($line =~ /has address (\d+)\.(\d+).(\d+)\.(\d+)/){
             my $ip = "$1.$2.$3.$4";
@@ -61,8 +60,8 @@ sub do_host
 
 sub do_nslookup_ipv4
 {
-    $info = `nslookup $hostname`;
-    my @lines=split(/\n/,$info);
+    $linux_cmd_output = `nslookup $hostname`;
+    my @lines=split(/\n/,$linux_cmd_output);
     foreach my $line (@lines){
         if ($line =~ /Address: (\d+)\.(\d+).(\d+)\.(\d+)/){
             my $ip = "$1.$2.$3.$4";
@@ -76,8 +75,8 @@ sub do_nslookup_ipv4
 
 sub do_nslookup_ipv6
 {
-    $info = `nslookup -query=AAAA $hostname`;
-    my @lines=split(/\n/,$info);
+    $linux_cmd_output = `nslookup -query=AAAA $hostname`;
+    my @lines=split(/\n/,$linux_cmd_output);
     foreach my $line (@lines){
         if ($line =~ /has AAAA address (.*)$/){
             my $ip = "$1";
@@ -91,21 +90,21 @@ sub do_nslookup_ipv6
 
 sub do_localhost
 {
-    $info = `/sbin/ifconfig`;
-    my @lines=split (/\n/, $info);
+    $linux_cmd_output = `/sbin/ifconfig`;
+    my @lines=split (/\n/, $linux_cmd_output);
     my %nic;
     my $currentInterface;
     foreach my $line (@lines){
         if ($line =~ /^(\S+)[\s|\t]+Link encap/){
             #br0       Link encap:Ethernet  HWaddr 00:21:9B:32:85:6A (rhel)
             my $interface=$1;
-            #print "\n$interface\t:";
             $currentInterface = $interface;
+            #print "\n$interface\t:";
         }elsif($line =~ /^(\S+)[\s|\t]+flags/){
             #eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500 (fedora)
             my $interface=$1;
-            #print "\n$interface\t:";
             $currentInterface = $interface;
+            #print "\n$interface\t:";
         }
         elsif ($line =~ /inet (addr:|)(\d+)\.(\d+).(\d+)\.(\d+) /){
             #inet addr:10.14.16.25  Bcast:10.14.16.255  Mask:255.255.255.0 (rhel)
