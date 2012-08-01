@@ -97,14 +97,25 @@ sub do_localhost
     my $currentInterface;
     foreach my $line (@lines){
         if ($line =~ /^(\S+)[\s|\t]+Link encap/){
-            #br0       Link encap:Ethernet  HWaddr 00:21:9B:32:85:6A
+            #br0       Link encap:Ethernet  HWaddr 00:21:9B:32:85:6A (rhel)
+            my $interface=$1;
+            #print "\n$interface\t:";
+            $currentInterface = $interface;
+        }elsif($line =~ /^(\S+)[\s|\t]+flags/){
+            #eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500 (fedora)
             my $interface=$1;
             #print "\n$interface\t:";
             $currentInterface = $interface;
         }
-        elsif ($line =~ /inet addr:(\d+)\.(\d+).(\d+)\.(\d+) /){
-            #inet addr:10.14.16.25  Bcast:10.14.16.255  Mask:255.255.255.0
-            my $ipv4 = "$1.$2.$3.$4";
+        elsif ($line =~ /inet (addr:|)(\d+)\.(\d+).(\d+)\.(\d+) /){
+            #inet addr:10.14.16.25  Bcast:10.14.16.255  Mask:255.255.255.0 (rhel)
+            #inet 10.14.16.171  netmask 255.255.255.0  broadcast 10.14.16.255 (fedora)
+            my $ipv4;
+            if (( $1 eq "addr:") || ($1 eq "" ) ){
+                $ipv4 = "$2.$3.$4.$5";
+            }else{ 
+                $ipv4 = "$1.$2.$3.$4";
+            }
             #print " [ipv4:$ipv4]";
             if (defined $currentInterface && exists $nic{$currentInterface}){
                 my $existingValue = $nic{$currentInterface};
@@ -113,9 +124,15 @@ sub do_localhost
                 $nic{$currentInterface} = $ipv4 ;
             }
         }
-        elsif ($line =~ /inet6 addr: (.*) Scope:Link/){
-            #inet6 addr: fe80::221:9bff:fe32:856a/64 Scope:Link
-            my $ipv6 = "$1";
+        elsif ($line =~ /inet6 (addr: |)([0-9|a-f|:|\/]+) /){
+            #inet6 addr: fe80::221:9bff:fe32:856a/64 Scope:Link (rhel)
+            #inet6 fe80::5054:ff:fe8e:ad46  prefixlen 64  scopeid 0x20<link> (fedora)
+            my $ipv6;
+            if (( $1 eq "addr: ") || ($1 eq "" ) ){
+                $ipv6 = "$2";
+            }else{
+                $ipv6 = "$1";
+            }
             #print " [ipv6:$ipv6]";
             if (defined $currentInterface && exists $nic{$currentInterface}){
                 my $existingValue = $nic{$currentInterface};
