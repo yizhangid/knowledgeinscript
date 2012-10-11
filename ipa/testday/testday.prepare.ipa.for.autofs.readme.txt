@@ -1,0 +1,32 @@
+1. to run this script you have to have valid admin kerberos ticket , please so "kinit admin" first
+2. sample command:
+    [root@f17apple (Fedora17-i386) ipa-client-automount] ./testday.prepare.ipa.for.autofs.sh -n sharetest -s f17aqua.yzhang.redhat.com -d /share -m direct
+location [sharetest] : nfs server [f17aqua.yzhang.redhat.com] : nfs dir [/share] : autofs local dir [/ipashare18482/ipapublic18482] 
+------------------------------------
+Added automount location "sharetest"
+------------------------------------
+  Location: sharetest
+---------------------------------------------------
+Added automount key "/ipashare18482/ipapublic18482"
+---------------------------------------------------
+  Key: /ipashare18482/ipapublic18482
+  Mount information: -ro,soft,rsize=8192,wsize=8192 f17aqua.yzhang.redhat.com:/share
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      autofs configuration for location [sharetest]
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/etc/auto.master:
+/-  /etc/auto.direct
+---------------------------
+/etc/auto.direct:
+/ipashare18482/ipapublic18482   -ro,soft,rsize=8192,wsize=8192 f17aqua.yzhang.redhat.com:/share
+
+maps not connected to /etc/auto.master:
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+to delete this configuration: ipa automountlocation-del sharetest
+to use this autofs configuration: 
+  (1) ipa-client-automount --server=f17aqua.yzhang.redhat.com --location=sharetest
+  (2) autofs should be automatic restart, if not, do 'systemctl restart autofs'
+  (3) to use this mount location: do 'cd /ipashare18482/ipapublic18482' on nfs client (where autofs runs)
+
