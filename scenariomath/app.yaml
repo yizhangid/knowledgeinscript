@@ -6,5 +6,4 @@ threadsafe: true
 
 handlers:
 - url: /.*
-  script: scenariomath.app
-  
+  script: MainPage.app
