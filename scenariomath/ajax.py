@@ -4,9 +4,11 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 import webapp2 
 import generic_parser
 
-class GenericTool(webapp2.RequestHandler):
+
+class AjaxExample(webapp2.RequestHandler):
     def get(self):
-        self.response.write(full_page)
+        print "get is being called"
+        self.response.write(AjaxHtml)
 
     def post(self):
         content = self.request.get("content")
@@ -30,21 +32,19 @@ test_syntax = """
     <hr>
     ask = os version * os * build * feature <br>
 """
-
 ajaxscript="""
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
 function submit(){
-    $.post("/generic",{"content" : $("#content").val()},function(response){
+    $.post("/ajax",{"content" : $("#content").val()},function(response){
             $("#result").empty().append(response);
         }, "html");
 }
 </script>
 """
 html_test_syntax = "<table align=center width=80%><tr><td><b>Example:</b><br><div style=\"background-color:e5eecc; color:006600; padding:10px; font-weight:bold\">" + test_syntax + "</div></td></tr></table><br>"
-html_header   = "<html><head><title>Generic Scenario P&C Tool</title>" + ajaxscript + "</head><body>"
-
-html_siteinfo = "<h3><center>Generic Scenario P&C Tool</center></h3><hr>"
+html_header   = "<html><head><title>Ajax Example::Generic Scenario P&C Tool</title>" + ajaxscript + "</head><body>"
+html_siteinfo = "<h3><center>AJAX Example ::: Generic Scenario P&C Tool</center></h3><hr>"
 html_usage    = """
 <p>
 It is better explained with example:</p>
@@ -81,7 +81,7 @@ html_form = """
 """
 html_result = "<div id=result></div>"
 html_footer = "<hr width=60% align=center><p align=center>--- be simple by yi zhang @ 2013 ---</p></body></html>"
-full_page = html_header + html_siteinfo + html_usage + html_test_syntax + html_form + html_result + html_footer
+AjaxHtml = html_header + html_siteinfo + html_usage + html_test_syntax + html_form + html_result +  html_footer
 
 
 #app = webapp2.WSGIApplication([('/matrix', Matrix)], debug=True) 

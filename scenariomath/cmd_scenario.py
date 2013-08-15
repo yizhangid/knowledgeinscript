@@ -4,10 +4,9 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 import webapp2 
 import cmd_parser
 
-
 class CommandLineTool(webapp2.RequestHandler):
     def get(self):
-        self.response.write(MAIN_PAGE_HTML)
+        self.response.write(full_html)
 
     def post(self):
         content = self.request.get("content")
@@ -24,21 +23,24 @@ class CommandLineTool(webapp2.RequestHandler):
             else:
                 output = "<div style=\" color:red\">" + parseError + "</div>"
             log = syntaxParser.log
-            
-        self.response.write(html_header)
-        self.response.write(html_siteinfo)
-        self.response.write(html_usage)
-        self.response.write(html_test_syntax)
-        self.response.write(html_form)
-        self.response.write(userInput)
-        self.response.write(output)
+        #self.response.write(userInput)
+        self.response.write(userInput + "<br>" + output)
         # self.response.write(log)
-        self.response.write(html_footer)
 
+ajaxscript="""
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+function submit(){
+    $.post("/cmd",{"content" : $("#content").val()},function(response){
+            $("#result").empty().append(response);
+        }, "html");
+}
+</script>
+"""
 test_syntax = "[--h:SELF_STAND] * [--domain:ANY] * [--server:MUST --domain] * [--realm:ANY] * [--principal:ANY] * [--password:NO -W]* [-W:NO -U] * [--ntp-server:NO -N] * [--force-ntpd:NO --no-ntp] * [--unattended:NO -W, MUST --principal --password --server]"
 html_test_syntax = "<table align=center width=80%><tr><td><b>Example:</b><br><div style=\"background-color:e5eecc; color:006600; padding:10px; font-weight:bold\">" + test_syntax + "</div></td></tr></table><br>"
-html_header   = "<html><head><title>Permutation and combination tool for Linux commands</title></head><body>"
-html_siteinfo = "<h3><center>Permutation and combination tool for Linux commands</center></h3><hr>"
+html_header   = "<html><head><title>Permutation and combination tool for Linux commands</title></head>" + ajaxscript + " <body>"
+html_headline = "<h3><center>Permutation and combination tool for Linux commands</center></h3><hr>"
 html_usage    = """
 <p>
 <table align=center>
@@ -73,13 +75,14 @@ html_usage    = """
 </table>
 </p>
 """
-html_form     = "<form action=\"/cmd\" method=\"post\">" + \
-                "<div align=center><textarea name=\"content\" rows=\"8\" cols=\"120\">" + \
-                "</textarea></div>" + \
-                "<div align=center><input type=\"submit\" value=\"Compute Combination\"></div>" + \
-                "</form>"
+
+html_form = """ 
+        <div align=center><textarea id=content  rows=8 cols=120></textarea></div>
+        <div align=center><input type=submit value="Compute Combination" onclick="submit()"></div> 
+"""
+html_result = "<div id=result></div>"
 html_footer = "<hr width=60% align=center><p align=center>--- yi zhang @ 2013 ---</p></body></html>"
-MAIN_PAGE_HTML = html_header + html_siteinfo + html_usage + html_test_syntax + html_form + html_footer
+full_html = html_header + html_headline + html_usage + html_test_syntax + html_form + html_result + html_footer
 
 #app = webapp2.WSGIApplication([('/', ScenarioMath)], debug=True) 
 # def main():

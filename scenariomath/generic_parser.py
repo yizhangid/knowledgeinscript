@@ -144,7 +144,7 @@ class SyntaxParser:
             index += 1
         return answer
                
-t=SyntaxParser(test)
-t.readme()
-t.doMath()
-t.finalAnswer()
+# t=SyntaxParser(test)
+# t.readme()
+# t.doMath()
+# t.finalAnswer()

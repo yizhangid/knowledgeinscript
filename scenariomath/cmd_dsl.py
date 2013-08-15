@@ -9,7 +9,7 @@ def printQueue(indent, msg, optionQueue):
         for option in optionQueue: 
             print "[" + option.getKeyword() + "]",
         print
-        print indent + "#----------------------------------------------#" 
+        print indent + "#----------------------------------------------#"
     
 def printQofQ(indent, msg, optionQofQ):
     if len(optionQofQ) == 0:
